@@ -12,11 +12,13 @@ data = read_json_file(
 base_url = "https://www.nykaaman.com/"
 product_data = []
 
-variants = data.get("productPage", {}).get("product", {}).get("variants", [])
-parent_id = data.get("productPage", {}).get("product", {}).get("parentId", "")
-rating = data.get("productPage", {}).get("product", {}).get("rating", "")
-rating_count = data.get("productPage", {}).get("product", {}).get("ratingCount", "")
-offers = data.get("productPage", {}).get("product", {}).get("offers", [])
+product_path = data.get("productPage", {}).get("product", {})
+
+variants = product_path.get("variants", [])
+parent_id = product_path.get("parentId", "")
+rating = product_path.get("rating", "")
+rating_count = product_path.get("ratingCount", "")
+offers = product_path.get("offers", [])
 coupon_offers = data.get("couponReducer", {}).get("coupons", {}).get("data", [])  
 
 for product in variants:
@@ -27,7 +29,7 @@ for product in variants:
     product_url = f"{base_url}{product.get('slug', '')}?productId={parent_id}&skuId={product.get('childId', '')}"
     product_info["url"] = product_url
 
-    product_info["id"] = product.get("sku", "")
+    product_info["id"] = product.get("childId", "")
     product_info["name"] = product.get("name", "")
     product_info["rating"] = float(rating) if rating != "" else ""                 
     product_info["rating_count"] = rating_count
